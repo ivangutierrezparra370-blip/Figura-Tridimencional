@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pentagono 3D</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .header-toolbar {
+        background-color: #1a1c23;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 15px;
+        flex-wrap: wrap;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        z-index: 10;
+    }
+
+    .header-toolbar h2 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #4a90e2;
+        border-right: 1px solid #444;
+        padding-right: 15px;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+        background: #2d303b;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid #444;
+    }
+
+    .input-group label {
+        font-size: 11px;
+        margin-right: 6px;
+        color: #888;
+        font-weight: bold;
+    }
+
+    input[type="number"] {
+        width: 60px;
+        background: #fff;
+        border: none;
+        border-radius: 2px;
+        padding: 2px;
+        font-size: 13px;
+    }
+
+    .btn {
+        cursor: pointer;
+        padding: 6px 12px;
+        background-color: #3b4252;
+        color: white;
+        border: 1px solid #4c566a;
+        border-radius: 4px;
+        font-size: 13px;
+        transition: 0.2s;
+    }
+
+    .btn:hover { background-color: #4c566a; }
+    .btn-primary { background-color: #4a90e2; border-color: #357abd; }
+    .btn-primary:hover { background-color: #357abd; }
+
+    .main-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        overflow: auto;
+    }
+
+    .canvas-container {
+        background: white;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        border: 1px solid #ccc;
+    }
+
+    .footer-options {
+        margin-top: 15px;
+        padding: 10px;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        display: flex;
+        gap: 20px;
+    }
+
+    label { font-size: 13px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="header-toolbar">
+    <h2>Pentagono</h2>
+    
+    <div class="input-group">
+        <label>X min</label><input type="number" id="xmmin" value="-27">
+    </div>
+    <div class="input-group">
+        <label>Y min</label><input type="number" id="ymmin" value="-27">
+    </div>
+    <div class="input-group">
+        <label>X max</label><input type="number" id="xmmax" value="27">
+    </div>
+    <div class="input-group">
+        <label>Y max</label><input type="number" id="ymmax" value="27">
+    </div>
+
+    <button class="btn btn-primary" onclick="dibujar()">Dibujar</button>
+    <button class="btn" onclick="rotarEjeZ()">Rotar en el eje Z</button>
+    <button class="btn" onclick="rotarEjeZNegativo()">Rotar en eje -Z</button>
+    <button class="btn" onclick="rotarEjeX()">Rotar en el eje X</button>
+    <button class="btn" onclick="rotarEjeY()">Rotar en el eje Y</button>
+    <button class="btn" onclick="toggleNumeros()">Numeros +/-</button>
+</div>
+
+<div class="main-container">
+    <div class="canvas-container">
+        <canvas id="canvas" width="700" height="700"></canvas>
+    </div>
+
+    <div class="footer-options">
+        <label><input type="checkbox" id="axisCheck" checked onchange="dibujar()"> Dibujar Ejes</label>
+        <label><input type="checkbox" id="marksCheck" checked onchange="dibujar()"> Dibujar Cotas</label>
+        <label><input type="checkbox" id="gridCheck" checked onchange="dibujar()"> Dibujar Cuadrícula</label>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+// Ángulos de inclinación inicial para apreciar la perspectiva tridimensional
+let anguloZ = 15, anguloX = -45, anguloY = 25;
+let mostrarNumeros = false;
+
+function toggleNumeros() { mostrarNumeros = !mostrarNumeros; dibujar(); }
+function rotarEjeZ() { anguloZ += 10; dibujar(); }
+function rotarEjeZNegativo() { anguloZ -= 10; dibujar(); }
+function rotarEjeX() { anguloX += 10; dibujar(); }
+function rotarEjeY() { anguloY += 10; dibujar(); }
+
+// --- CÁLCULO DE VÉRTICES MATEMÁTICOS PARA EL PRISMA PENTAGONAL ---
+const radio = 7;      // Radio del pentágono base
+const grosor = 5;     // Mitad de la profundidad/altura del prisma en el eje Z
+const verticesOriginales = [];
+
+// 5 vértices de la tapa trasera (Z = -grosor) y 5 de la frontal (Z = grosor)
+// Usamos funciones trigonométricas básicas distribuidas en 360 grados (2 * PI)
+for (let i = 0; i < 5; i++) {
+    let ang = (i * 2 * Math.PI / 5) - Math.PI / 2; // -Math.PI/2 para que apunte hacia arriba
+    let x = radio * Math.cos(ang);
+    let y = radio * Math.sin(ang);
+    
+    // Vértices tapa trasera (Índices del 0 al 4)
+    verticesOriginales.push({x: x, y: y, z: -grosor});
+}
+for (let i = 0; i < 5; i++) {
+    let ang = (i * 2 * Math.PI / 5) - Math.PI / 2;
+    let x = radio * Math.cos(ang);
+    let y = radio * Math.sin(ang);
+    
+    // Vértices tapa frontal (Índices del 5 al 9)
+    verticesOriginales.push({x: x, y: y, z: grosor});
+}
+
+// --- DEFINICIÓN DE LAS CARAS (7 caras totales con colores únicos) ---
+const caras = [
+    // Tapa trasera (unión de los primeros 5 vértices)
+    { indices: [4, 3, 2, 1, 0], color: "rgba(255, 65, 54, 0.85)" },    // Rojo
+    // Tapa frontal (unión de los siguientes 5 vértices)
+    { indices: [5, 6, 7, 8, 9], color: "rgba(0, 116, 217, 0.85)" },   // Azul
+    
+    // Las 5 caras laterales rectangulares que conectan ambas tapas
+    { indices: [0, 1, 6, 5], color: "rgba(46, 204, 64, 0.85)" },      // Verde
+    { indices: [1, 2, 7, 6], color: "rgba(255, 133, 27, 0.85)" },     // Naranja
+    { indices: [2, 3, 8, 7], color: "rgba(255, 220, 0, 0.85)" },      // Amarillo
+    { indices: [3, 4, 9, 8], color: "rgba(177, 13, 201, 0.85)" },     // Morado
+    { indices: [4, 0, 5, 9], color: "rgba(57, 204, 204, 0.85)" }      // Turquesa
+];
+
+function dibujar() {
+    const xmmin = parseInt(document.getElementById("xmmin").value) || -18;
+    const ymmin = parseInt(document.getElementById("ymmin").value) || -18;
+    const xmmax = parseInt(document.getElementById("xmmax").value) || 18;
+    const ymmax = parseInt(document.getElementById("ymmax").value) || 18;
+
+    const drawAxes = document.getElementById("axisCheck").checked;
+    const drawMarks = document.getElementById("marksCheck").checked;
+    const drawGrid = document.getElementById("gridCheck").checked;
+
+    const w = canvas.width, h = canvas.height;
+    const centroX = w / 2, centroY = h / 2;
+    
+    const rangoX = xmmax - xmmin;
+    const rangoY = ymmax - ymmin;
+    const xScale = w / rangoX;
+    const yScale = h / rangoY;
+
+    let paso = 1;
+    if (rangoX > 50) paso = 5;
+    if (rangoX > 100) paso = 10;
+    if (rangoX > 500) paso = 50;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // CUADRÍCULA
+    if (drawGrid) {
+        ctx.strokeStyle = "#666";
+        ctx.lineWidth = 0.8;
+        for (let i = xmmin; i <= xmmax; i += paso) {
+            let x = (i - xmmin) * xScale;
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+        }
+        for (let j = ymmin; j <= ymmax; j += paso) {
+            let y = (ymmax - j) * yScale;
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+    }
+
+    // EJES PRINCIPALES
+    let ejeX_pos = (0 - xmmin) * xScale;
+    let ejeY_pos = (ymmax - 0) * yScale;
+
+    if (drawAxes) {
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(ejeX_pos, 0); ctx.lineTo(ejeX_pos, h); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, ejeY_pos); ctx.lineTo(w, ejeY_pos); ctx.stroke();
+    }
+
+    // COTAS Y NÚMEROS
+    if (drawMarks) {
+        ctx.fillStyle = "#000";
+        ctx.font = rangoX > 100 ? "9px Arial" : "bold 11px Arial";
+
+        for (let i = xmmin; i <= xmmax; i += paso) {
+            if (i === 0) continue;
+            let x = (i - xmmin) * xScale;
+            ctx.beginPath(); ctx.moveTo(x, ejeY_pos - 6); ctx.lineTo(x, ejeY_pos + 6); ctx.stroke();
+            if (mostrarNumeros) {
+                ctx.textAlign = "center";
+                ctx.fillText(i, x, ejeY_pos + 20);
+            }
+        }
+        for (let j = ymmin; j <= ymmax; j += paso) {
+            if (j === 0) continue;
+            let y = (ymmax - j) * yScale;
+            ctx.beginPath(); ctx.moveTo(ejeX_pos - 6, y); ctx.lineTo(ejeX_pos + 6, y); ctx.stroke();
+            if (mostrarNumeros) {
+                ctx.textAlign = "right";
+                ctx.fillText(j, ejeX_pos - 10, y + 4);
+            }
+        }
+    }
+
+    // --- PROCESAMIENTO Y ROTACIÓN MATRICIAL 3D ---
+    const radX = (anguloX * Math.PI) / 180;
+    const radY = (anguloY * Math.PI) / 180;
+    const radZ = (anguloZ * Math.PI) / 180;
+
+    let verticesRotados = verticesOriginales.map(v => {
+        let x = v.x;
+        let y = v.y;
+        let z = v.z;
+
+        // Rotación en eje X
+        let y1 = y * Math.cos(radX) - z * Math.sin(radX);
+        let z1 = y * Math.sin(radX) + z * Math.cos(radX);
+        y = y1; z = z1;
+
+        // Rotación en eje Y
+        let x2 = x * Math.cos(radY) + z * Math.sin(radY);
+        let z2 = -x * Math.sin(radY) + z * Math.cos(radY);
+        x = x2; z = z2;
+
+        // Rotación en eje Z
+        let x3 = x * Math.cos(radZ) - y * Math.sin(radZ);
+        let y3 = x * Math.sin(radZ) + y * Math.cos(radZ);
+        x = x3; y = y3;
+
+        // Proyección a coordenadas de la pantalla plana 2D
+        let pantallaX = centroX + (x * xScale);
+        let pantallaY = centroY - (y * yScale); 
+
+        return { x: pantallaX, y: pantallaY, z: z };
+    });
+
+    // Se calcula la media Z de los vértices que componen la cara
+    let carasOrdenadas = caras.map(cara => {
+        let zSum = 0;
+        cara.indices.forEach(idx => zSum += verticesRotados[idx].z);
+        return { ...cara, zPromedio: zSum / cara.indices.length };
+    });
+
+    // Ordenar de mayor profundidad al fondo (Z menor) a menor profundidad al frente (Z mayor)
+    carasOrdenadas.sort((a, b) => a.zPromedio - b.zPromedio);
+
+    // --- DIBUJADO DE LAS CARAS DEL PENTÁGONO ---
+    carasOrdenadas.forEach(cara => {
+        ctx.beginPath();
+        let primerVertice = verticesRotados[cara.indices[0]];
+        ctx.moveTo(primerVertice.x, primerVertice.y);
+
+        for (let i = 1; i < cara.indices.length; i++) {
+            let v = verticesRotados[cara.indices[i]];
+            ctx.lineTo(v.x, v.y);
+        }
+        
+        ctx.closePath();
+        
+        ctx.fillStyle = cara.color;
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff"; // Separadores blancos para realzar las aristas en la rotación
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    });
+}
+
+// Renderizado inicial
+dibujar();
+</script>
+</body>
+</html>

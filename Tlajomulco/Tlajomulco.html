@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a Tlajomulco - Gobierno Municipal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1568515045052-f9a854d70bfd?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-red-700 tracking-wider">Tlajomulco<span class="text-amber-500">Conecta</span></span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#inicio" class="text-gray-600 hover:text-red-700 font-medium transition">Inicio</a>
+                    <a href="#tradiciones" class="text-gray-600 hover:text-red-700 font-medium transition">Tradiciones</a>
+                    <a href="#artesania" class="text-gray-600 hover:text-red-700 font-medium transition">Identidad</a>
+                    <a href="#guia" class="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition">Guía de Bienvenida</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header id="inicio" class="hero-bg h-[70vh] flex items-center justify-center text-center text-white px-4">
+        <div class="max-w-3xl">
+            <span class="bg-amber-500 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full text-black">¡Bienvenidos a tu nuevo hogar!</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold mt-4 mb-6 leading-tight">Tlajomulco de Zúñiga te recibe con los brazos abiertos</h1>
+            <p class="text-lg md:text-xl text-gray-200 mb-8">Descubre la riqueza cultural, la historia y las tradiciones que hacen latir el corazón de nuestra comunidad.</p>
+            <a href="#tradiciones" class="bg-amber-500 text-gray-900 px-6 py-3 rounded-full font-bold shadow-lg hover:bg-amber-400 transition inline-block">Explorar Tradiciones</a>
+        </div>
+    </header>
+
+    <section id="tradiciones" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-950">Nuestras Tradiciones Vivas</h2>
+            <p class="text-gray-600 mt-2 max-w-2xl mx-auto">Conoce las festividades que nos dan identidad y en las que muy pronto estarás participando con tu familia.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="h-48 bg-amber-700 flex items-center justify-center text-white text-5xl">
+                    <i class="fa-solid fa-cake-candles"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-bold text-amber-600 uppercase tracking-wide">Enero</span>
+                    <h3 class="text-xl font-bold text-gray-900 mt-1 mb-2">Fiesta de los Reyes Magos (Cajititlán)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Una de las celebraciones más importantes del municipio. Miles de fieles se reúnen para pasear a los Reyes Magos en lancha por la laguna, pidiendo por un buen año.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="h-48 bg-red-700 flex items-center justify-center text-white text-5xl">
+                    <i class="fa-solid fa-mask"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-bold text-red-600 uppercase tracking-wide">Marzo / Abril</span>
+                    <h3 class="text-xl font-bold text-gray-900 mt-1 mb-2">Los Xayacates</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Personajes emblemáticos con máscaras de madera y atuendos coloridos que llenan de alegría, bailes y bromas las calles durante el carnaval de San Antonio Tlayacapan y zonas vecinas.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="h-48 bg-amber-900 flex items-center justify-center text-white text-5xl">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-bold text-amber-800 uppercase tracking-wide">Octubre / Noviembre</span>
+                    <h3 class="text-xl font-bold text-gray-900 mt-1 mb-2">Día de Muertos y Ofrendas</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Las plazas principales de Tlajomulco se llenan de altares de muertos, cempasúchil y tapetes de aserrín. Una oportunidad perfecta para convivir en comunidad y honrar la memoria.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="artesania" class="bg-amber-50 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <span class="text-sm font-bold text-red-700 uppercase tracking-widest">Orgullo Local</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Tierra de Artesanos y Charrería</h2>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Tlajomulco no es solo historia festiva, también es hogar de talentosos artesanos que trabajan el <strong>barro bruñido</strong> y la piedra basalto (aquí se hacen los mejores molcajetes). Además, la Charrería es el deporte por excelencia en nuestras tierras, reflejando el espíritu fuerte y hospitalario de nuestra gente.
+                </p>
+                <div class="flex space-x-4">
+                    <div class="flex items-center space-x-2 text-gray-700 font-semibold">
+                        <i class="fa-solid fa-pot-food text-amber-600"></i> <span>Artesanía Única</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-gray-700 font-semibold">
+                        <i class="fa-solid fa-horse text-amber-600"></i> <span>Tradición Charra</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-200 h-64 rounded-2xl flex items-center justify-center text-amber-800 font-bold shadow-inner">
+                [Aquí puedes colocar una galería o video de los artesanos de San Lucas Evangelista]
+            </div>
+        </div>
+    </section>
+
+    <section id="guia" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="bg-gradient-to-r from-red-800 to-red-900 text-white rounded-3xl p-8 md:p-12 shadow-xl">
+            <h2 class="text-3xl font-bold mb-4">¿Eres nuevo en Tlajomulco?</h2>
+            <p class="text-red-100 max-w-2xl mx-auto mb-8">Hemos preparado una guía interactiva descargable con mapas, ubicaciones de servicios de salud, delegaciones de gobierno y centros culturales para ti y tu familia.</p>
+            <button class="bg-white text-red-900 font-bold px-8 py-3 rounded-full hover:bg-gray-100 transition shadow-md">
+                <i class="fa-solid fa-download mr-2"></i> Descargar Guía de Integración (PDF)
+            </button>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <p class="text-white font-bold text-lg">Gobierno Municipal de Tlajomulco de Zúñiga</p>
+                <p class="text-sm mt-1">Proyecto de Servicio Social - Integración Comunitaria Familia</p>
+            </div>
+            <div class="flex space-x-6 text-xl">
+                <a href="#" class="hover:text-white transition"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#" class="hover:text-white transition"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="text-center text-xs mt-8 border-t border-gray-800 pt-4">
+            &copy; 2026 Tlajomulco de Zúñiga. Todos los derechos reservados.
+        </div>
+    </footer>
+
+</body>
+</html>
